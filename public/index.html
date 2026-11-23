@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Exam Portal</title>
+<style>
+:root{--bg:#020617;--ink:#f8fafc;--mut:#94a3b8;--card:#0f172a;--line:#334155;--brand:#3b82f6;--brand-glow:#3b82f640;--bi:#ffffff;--sel:#1e293b;--accent:#f59e0b;--warn:#f59e0b;--wbg:#1c2536;--ok:#22c55e;--danger:#ef4444;--shadow:0 10px 30px -10px rgba(0,0,0,0.5);--shadow-sm:0 4px 6px -1px rgba(0,0,0,0.3);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){color-scheme:light;--bg:#f8fafc;--ink:#0f172a;--mut:#64748b;--card:#ffffff;--line:#e2e8f0;--brand:#2563eb;--brand-glow:#2563eb20;--bi:#ffffff;--sel:#f1f5f9;--warn:#d97706;--wbg:#fef3c7;--ok:#16a34a;--danger:#dc2626;--shadow:0 10px 30px -10px rgba(0,0,0,0.1);--shadow-sm:0 4px 6px -1px rgba(0,0,0,0.05)}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#020617;--ink:#f8fafc;--mut:#94a3b8;--card:#0f172a;--line:#334155;--brand:#3b82f6;--brand-glow:#3b82f640;--bi:#ffffff;--sel:#1e293b;--accent:#f59e0b;--warn:#f59e0b;--wbg:#1c2536;--ok:#22c55e;--danger:#ef4444;--shadow:0 10px 30px -10px rgba(0,0,0,0.5);--shadow-sm:0 4px 6px -1px rgba(0,0,0,0.3)}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(135deg, var(--bg) 0%, var(--card) 100%),radial-gradient(circle at top right, rgba(59,130,246,0.08), transparent 50%);background-attachment:fixed}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--card)}
+body.x{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+input,textarea{-webkit-user-select:text;user-select:text}
+h1,h2,.q,.big{font-family:Georgia,"Times New Roman",serif;letter-spacing:-0.02em}
+h2{font-size:1.25rem;margin:0 0 4px;font-weight:700}
+#ex{display:none}#ex.on{display:block}
+.wrap{max-width:800px;margin:0 auto;padding:20px 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:var(--shadow-sm);transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}
+.card:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:rgba(59,130,246,0.3)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.mut{color:var(--mut);font-size:.875rem}
+.rules{margin:0 0 16px;padding:14px 18px;border-left:4px solid var(--accent);background:var(--wbg);border-radius:10px;font-size:.9rem;color:var(--ink)}
+label{display:block;font-weight:600;margin:12px 0 6px;font-size:.9rem;color:var(--ink)}
+input[type=text],input[type=password],input[type=number],select,textarea{width:100%;box-sizing:border-box;padding:12px 14px;font:inherit;font-size:15px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);transition:border-color .2s ease,box-shadow .2s ease}
+input[type=text]:focus,input[type=password]:focus,input[type=number]:focus,select:focus,textarea:focus{border-color:var(--brand);outline:none;box-shadow:0 0 0 3px var(--brand-glow)}
+textarea.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.5;white-space:pre;overflow:auto}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.btn,.tab{padding:12px 20px;font:inherit;font-weight:600;border-radius:10px;border:1px solid var(--brand);background:var(--brand);color:var(--bi);cursor:pointer;transition:all .2s ease;box-shadow:0 4px 14px 0 var(--brand-glow)}
+.btn:hover{background:#2563eb;transform:translateY(-1px);box-shadow:0 6px 20px 0 var(--brand-glow)}
+.btn:active{transform:translateY(0)}
+.btn.alt,.tab{background:transparent;color:var(--brand)}
+.btn.alt:hover{background:rgba(59,130,246,0.1)}
+.tab{padding:10px 16px;font-size:.9rem}
+.tab.on{background:var(--brand);color:var(--bi)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+:is(.btn,.tab,.opt,.pb,input,select,textarea):focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.tabs{display:flex;gap:8px;margin-bottom:16px}
+.err{color:var(--danger);min-height:1.3em;margin:8px 0 0;font-size:.875rem}
+.link{background:var(--sel);border:1px solid var(--line)}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--bg);padding:2px 8px;border-radius:6px;border:1px solid var(--line);font-size:.875em}
+#hd{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(15,23,42,0.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+#hd .in{max-width:800px;margin:0 auto;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logo{width:44px;height:44px;border-radius:50%;display:block;background:#fff;padding:3px;box-shadow:0 0 20px rgba(59,130,246,0.7),0 0 40px rgba(59,130,246,0.5);animation:logoGlow 3s ease-in-out infinite alternate}
+@keyframes logoGlow{from{box-shadow:0 0 20px rgba(59,130,246,0.7),0 0 40px rgba(59,130,246,0.5)}to{box-shadow:0 0 35px rgba(59,130,246,1),0 0 60px rgba(59,130,246,0.8)}}
+#tm{font:700 1.5rem Georgia,serif;font-variant-numeric:tabular-nums}#tm.low{color:var(--accent)}
+.q{font-size:1.25rem;line-height:1.5;margin:8px 0 20px;color:var(--ink)}
+.opt{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;padding:14px 16px;margin-bottom:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;cursor:pointer;transition:all .15s ease}
+.opt:hover{border-color:var(--brand);background:rgba(59,130,246,0.05)}
+.opt b{flex:none;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-size:.9rem;font-weight:700;background:var(--bg)}
+.opt.sel{border-color:var(--brand);background:var(--brand-glow)}
+.opt.sel b{background:var(--brand);color:var(--bi);border-color:var(--brand)}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:20px}
+#pl{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:8px}
+.pb{padding:10px 0;font:inherit;font-size:.9rem;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);cursor:pointer;transition:all .2s ease}
+.pb:hover{border-color:var(--brand)}
+.pb.ans{background:var(--brand);border-color:var(--brand);color:#fff}
+.pb.cur{outline:2px solid var(--brand);font-weight:700;background:var(--sel)}
+#lk{position:fixed;inset:0;z-index:50;background:rgba(2,6,23,0.95);backdrop-filter:blur(20px);display:none;align-items:center;justify-content:center;padding:calc(20px + env(safe-area-inset-top,0px)) 16px calc(20px + env(safe-area-inset-bottom,0px))}
+#lk.on{display:flex}#lk .card{max-width:440px;width:100%;text-align:center}#lk h2{color:var(--ink);font-size:1.75rem}
+#lk .mut{color:var(--mut);margin-bottom:16px}
+.big{font-size:4rem;line-height:1;margin:12px 0;color:var(--brand);font-weight:800}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:60;background:var(--card);color:var(--ink);padding:12px 20px;border-radius:10px;max-width:90%;display:none;box-shadow:var(--shadow);border:1px solid var(--line);animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateX(-50%) translateY(20px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
+pre{white-space:pre-wrap;background:var(--bg);padding:14px;border-radius:12px;margin:10px 0;font-size:.9rem;border:1px solid var(--line)}
+@media print{body{display:none}}
+@media(max-width:480px){.g3{grid-template-columns:1fr}}
+.login-wrap{position:fixed;inset:0;z-index:0;background-image:url("login-bg.jpg?v=1");background-size:cover;background-position:center;background-attachment:fixed;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-wrap::after{content:"";position:absolute;inset:0;background:rgba(2,6,23,0.7);z-index:0}
+.login-wrap .card{position:relative;z-index:1;max-width:400px;width:100%;background:rgba(15,23,42,0.85);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.1)}
+.login-wrap h2,.login-wrap label,.login-wrap .mut{color:var(--ink)}
+.login-wrap input[type=password]{background:rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.2);color:var(--ink)}
+.login-wrap input[type=password]:focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-glow)}
+</style></head><body>
+<div id="app" class="wrap"></div>
+<section id="ex">
+<div id="hd"><div class="in"><div><div id="who" style="font-weight:600"></div><div class="mut" id="qn"></div></div><div id="tm"></div></div></div>
+<div class="wrap"><div class="card"><div class="q" id="qt"></div><div id="op"></div><div class="mut" id="wc"></div>
+<div class="nav"><button id="pv" class="btn alt">Previous</button><button id="nx" class="btn">Next</button></div><p id="msg" class="err"></p></div><div id="pl"></div></div>
+</section>
+<div id="lk"><div class="card"><h2>Test locked</h2><p id="lw"></p><p class="mut">Raise your hand. The invigilator must enter the code to continue. Your timer is still running.</p>
+<input id="cd" type="password" inputmode="numeric" placeholder="Unlock code" autocomplete="off"><p id="ce" class="err"></p><button id="ub" class="btn">Unlock</button></div></div>
+<div id="toast"></div>
+<script>
+const UNLOCK_CODE="1234";
+const $=i=>document.getElementById(i),esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const rid=()=>Math.random().toString(36).slice(2,8),cl=o=>JSON.parse(JSON.stringify(o));
+let db=null,user=null,isT=false,uid="local",mode="s",tab="tests",C=[],T=[],last=null,rt="",RR=[],S=null,TS=null,tm=null,locked=false,cur=0,conf=false;
+let TOK=sessionStorage.getItem("tok")||"";
+const PID=(location.pathname.match(/^\/t\/([\w-]+)/)||[])[1]||"";
+async function api(m,u,b){const r=await fetch(u,{method:m,headers:{"Content-Type":"application/json","x-token":TOK},body:b?JSON.stringify(b):undefined});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||"Something went wrong. Try again.");return d}
+const L={g(k){try{return JSON.parse(localStorage.getItem("m1:"+k))}catch(e){return null}},s(k,v){try{localStorage.setItem("m1:"+k,JSON.stringify(v))}catch(e){}}};
+function say(m){const t=$("toast");t.textContent=m;t.style.display="block";clearTimeout(say.t);say.t=setTimeout(()=>t.style.display="none",4000)}
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const svS=()=>L.s("s",S);
+async function loadAll(){C=await api("GET","/api/classes");T=await api("GET","/api/tests")}
+
+function parse(txt,ty){return txt.split(/\r?\n/).map(l=>l.trim()).filter(Boolean).map(l=>{const x=(l.includes("|")?l.split("|"):l.split(",")).map(s=>s.trim());
+ if(ty==="mcq"){const k="ABCD".indexOf((x[5]||"").toUpperCase());return x.length>=6&&k>=0&&x[0]?{q:x[0],o:x.slice(1,5),a:k}:null}
+ return x[0]?{q:l}:null}).filter(Boolean)}
+const TN={mcq:"MCQ",code:"Coding",write:"Writing"};
+
+const hdr=()=>`<div class="top"><img src="logo.png?v=1" class="logo" alt="Logo"><h2>Exam Portal</h2>${mode==="t"&&TOK?'<button class="tab" data-a="logout">Log out</button>':""}</div>`;
+const loginView=()=>`<div class="login-wrap"><div class="card"><h2>Teacher login</h2><label for="pw">Password</label><input id="pw" type="password"><p class="mut">Default password is teacher123. Change it with the TEACHER_PASSWORD setting.</p><button class="btn" data-a="login">Log in</button></div></div>`;
+function render(){$("app").innerHTML=hdr()+(mode==="t"?(TOK?tView():loginView()):sView());document.body.classList.remove("x")}
+function tView(){
+ const tabs=["classes","tests","results"].map(t=>`<button class="tab${tab===t?" on":""}" data-a="tab" data-v="${t}">${t[0].toUpperCase()+t.slice(1)}</button>`).join("");
+ return `<div class="tabs">${tabs}</div>`+(tab==="classes"?vClasses():tab==="tests"?vTests():vRes());
+}
+const vClasses=()=>`<div class="card"><h2>New class</h2><label for="cn">Class name</label><input id="cn" type="text" placeholder="MCA Sem 3, Section A">
+<label for="cr">Student roll list (optional, one per line: roll, name)</label><textarea id="cr" rows="5" placeholder="21MCA001, Asha Rao"></textarea>
+<p class="mut">If you add a roll list, only those roll numbers can start tests assigned to this class.</p><button class="btn" data-a="mkclass">Create class</button></div>`
+ +(C.length?"":'<p class="mut">No classes yet. Create one, then assign tests to it.</p>')
+ +C.map(c=>`<div class="card row"><b>${esc(c.name)}</b><span class="mut">${c.st.length} on roll list, ${T.filter(t=>t.cid===c.id).length} tests</span></div>`).join("");
+const vTests=()=>{
+ const lk=last?T.find(t=>t.id===last):null;
+ return (lk?`<div class="card link"><h2>Test ready to share</h2><p>Send students this link and give the passcode separately.</p><p><code>${location.origin}/t/${lk.id}</code></p><p>Test ID: <code>${lk.id}</code> Passcode: <code>${esc(lk.pc)}</code></p><button class="btn alt" data-a="copy" data-v="${location.origin}/t/${lk.id}">Copy link</button></div><div class="card wbg"><h3 style="margin:0 0 6px">Invigilator unlock code</h3><p class="mut" style="margin:0">If a student is locked out of a test, enter this code on the unlock screen: <b style="font-size:1.3rem">${UNLOCK_CODE}</b></p></div>`:"")
+ +`<div class="card"><h2>Create a test</h2>
+ <label for="tt">Test title</label><input id="tt" type="text" placeholder="Module 1 test">
+ <div class="g3"><div><label for="tc">Class</label><select id="tc">${C.length?C.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join(""):'<option value="">Create a class first</option>'}</select></div>
+ <div><label for="ty">Test type</label><select id="ty"><option value="mcq">MCQ</option><option value="code">Coding</option><option value="write">Writing</option></select></div>
+ <div><label for="tmn">Time (minutes)</label><input id="tmn" type="number" min="1" value="25"></div></div>
+ <div class="g3"><div><label for="qn2">Questions per student</label><input id="qn2" type="number" min="1" placeholder="All"></div>
+ <div><label for="mk">Marks per question</label><input id="mk" type="number" min="1" value="1"></div>
+ <div><label for="pc">Passcode</label><input id="pc" type="text" value="${Math.floor(1000+Math.random()*9000)}"></div></div>
+ <label for="qb">Questions (paste, or upload a .txt or .csv file)</label><input id="qf" type="file" accept=".txt,.csv">
+ <textarea id="qb" rows="7" placeholder="What is the OSI layer count? | 5 | 6 | 7 | 8 | C"></textarea>
+ <p class="mut">MCQ: <code>question | A | B | C | D | correct letter</code>. Coding or writing: one question per line. If you upload more questions than the count above, each student gets a random set.</p>
+ <button class="btn" data-a="mktest">Create test and get link</button></div>`
+ +T.map(t=>`<div class="card row"><div><b>${esc(t.t)}</b><div class="mut">${TN[t.ty]}, ${esc(t.cn)}, ${t.m} min, ${t.n} of ${t.qs.length} questions, ${t.n*t.mk} marks</div><div class="mut">Link <code>${location.origin}/t/${t.id}</code> Passcode <code>${esc(t.pc)}</code></div></div><span><button class="btn alt" data-a="res" data-v="${t.id}">Results</button> <button class="btn alt" data-a="del" data-v="${t.id}">Delete</button></span></div>`).join("");
+};
+function vRes(){
+ const t=T.find(x=>x.id===rt);
+ return `<div class="card"><div class="row"><h2>Results</h2>${rt?`<a href="/api/export/${rt}?token=${TOK}">Download CSV</a>`:""}</div><select id="rs" data-a="res" data-ch="1"><option value="">Choose a test</option>${T.map(x=>`<option value="${x.id}"${x.id===rt?" selected":""}>${esc(x.t)} (${esc(x.cn)})</option>`).join("")}</select></div>`
+ +(t&&!RR.length?'<p class="mut">No submissions yet.</p>':"")
+ +RR.map(x=>{const sc=x.s!=null?x.s:x.g;return `<div class="card"><div class="row"><div><b>${esc(x.n)}</b> <span class="mut">${esc(x.r)}</span><div class="mut">Time ${Math.floor(x.e/60)}m ${x.e%60}s, warnings ${x.v}</div></div><b>${sc!=null?sc+" / "+x.x:"Needs grading"}</b></div>
+ ${x.ans?`<details><summary>View answers</summary>${x.ans.map((a,i)=>`<p><b>${i+1}. ${esc(a.q)}</b></p><pre>${esc(a.a)||"(blank)"}</pre>`).join("")}
+ <div class="row"><input id="g-${esc(x.u)}" type="number" min="0" max="${x.x}" value="${x.g!=null?x.g:""}" placeholder="Marks out of ${x.x}" style="max-width:200px"><button class="btn" data-a="grade" data-u="${esc(x.u)}">Save marks</button></div></details>`:""}</div>`}).join("");
+}
+function sView(){
+ if(S&&S.d)return doneView();
+ return `<div class="card"><h2>Join a test</h2><div class="rules">Copying, screenshots, switching tabs or leaving full screen lock the test. Only the invigilator can unlock it with a code, and the timer keeps running.</div>
+ <label for="ti">Test ID</label><input id="ti" type="text" value="${esc(PID)}" autocomplete="off">
+ <label for="sn">Full name</label><input id="sn" type="text" autocomplete="off"><label for="sr">Roll number</label><input id="sr" type="text" autocomplete="off">
+ <label for="sp">Passcode</label><input id="sp" type="password" autocomplete="off"><p class="mut">The passcode comes from your teacher.</p><button class="btn" data-a="start">Start test</button></div>`;
+}
+function doneView(){
+ const m=TS&&TS.ty==="mcq";
+ return `<div class="card" style="text-align:center"><h2>Test submitted</h2><div class="mut">${esc(S.n)} (Roll no. ${esc(S.r)})</div>${S.s!=null?`<div class="big">${S.s} / ${S.x}</div><div>Your marks</div>`:'<p>Your answers are with your teacher. Marks will be shared after grading.</p>'}
+ ${S.ok===0?'<p class="err">Your result could not be saved to the teacher’s records. Tell your invigilator.</p>':""}<p><button class="btn alt" data-a="again">Back to start</button></p></div>`;
+}
+
+const act={
+ mode(a){mode=a.dataset.v;render()},
+ tab(a){tab=a.dataset.v;render()},
+ async login(){try{const r=await api("POST","/api/login",{password:$("pw").value});TOK=r.token;sessionStorage.setItem("tok",TOK);await loadAll();render()}catch(e){say(e.message)}},
+ logout(){TOK="";sessionStorage.removeItem("tok");render()},
+ copy(a){try{navigator.clipboard.writeText(a.dataset.v);say("Link copied.")}catch(e){say("Select the link and copy it.")}},
+ async mkclass(){const n=$("cn").value.trim();if(!n)return say("Enter a class name.");
+  try{await api("POST","/api/classes",{name:n,st:$("cr").value.split(/\n/).map(x=>x.trim()).filter(Boolean)});await loadAll();render();say("Class created.")}catch(e){say(e.message)}},
+ async mktest(){
+  const g=i=>$(i).value.trim(),ty=g("ty"),qs=parse($("qb").value,ty),m=+g("tmn"),mk=+g("mk")||1,pc=g("pc"),c=C.find(x=>x.id===g("tc"));
+  if(!g("tt")||!c)return say("Add a title and choose a class.");
+  if(!qs.length)return say("No valid questions found. Check the format shown under the box.");
+  if(!m||!pc)return say("Set the time and a passcode.");
+  try{const r=await api("POST","/api/tests",{t:g("tt"),ty,cid:c.id,m,n:+g("qn2")||qs.length,mk,pc,qs});await loadAll();last=r.id;render();window.scrollTo(0,0)}catch(e){say(e.message)}},
+ async del(a){if(!confirm("Delete this test and all its results?"))return;try{await api("DELETE","/api/tests/"+a.dataset.v);if(last===a.dataset.v)last=null;await loadAll();render()}catch(e){say(e.message)}},
+ async res(a){rt=a.dataset.ch?a.value:a.dataset.v;tab="results";RR=[];if(rt)try{RR=await api("GET","/api/results/"+rt)}catch(e){say(e.message)}render()},
+ async grade(a){const u=a.dataset.u,v=$("g-"+u).value;if(v==="")return say("Enter marks.");try{await api("POST","/api/grade",{u,g:v});act.res({dataset:{v:rt}});say("Marks saved.")}catch(e){say(e.message)}},
+ async start(){
+  const g=i=>$(i).value.trim(),id=g("ti"),n=g("sn"),r=g("sr"),pc=g("sp");
+  if(!id||n.length<2||!r||!pc)return say("Fill in all four fields.");
+  try{const x=await api("POST","/api/start",{id,r,n,pc});TS=x.t;
+   S={tid:id,n,r,pc,k:x.k,t0:Date.now()-x.el*1000,o:x.o,a:{},v:0,d:false};svS();
+   if(left()<=0)return fin();fs();begin()}catch(e){say(e.message)}},
+ again(){S=null;TS=null;L.s("s",null);render()}
+};
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id==="pw")act.login()});
+document.addEventListener("click",e=>{const a=e.target.closest("[data-a]");if(a&&a.tagName!=="SELECT"&&act[a.dataset.a])act[a.dataset.a](a)});
+document.addEventListener("change",e=>{if(e.target.id==="rs")act.res(e.target);if(e.target.id==="qf"&&e.target.files[0]){const r=new FileReader();r.onload=()=>{$("qb").value=($("qb").value?$("qb").value+"\n":"")+r.result};r.readAsText(e.target.files[0])}});
+
+const DUR=()=>TS.m*60,left=()=>DUR()-Math.floor((Date.now()-S.t0)/1000);
+const ok=v=>v!==undefined&&String(v).trim()!=="";
+function showEx(b){$("ex").classList.toggle("on",b);$("app").style.display=b?"none":"block";document.body.classList.toggle("x",b)}
+function begin(){showEx(true);$("who").textContent=S.n+" ("+S.r+")";$("pl").innerHTML="";cur=0;pal();draw();tick();clearInterval(tm);tm=setInterval(tick,1000)}
+function tick(){const l=left();if(l<=0){fin();return}const e=$("tm");e.textContent=String(Math.floor(l/60)).padStart(2,"0")+":"+String(l%60).padStart(2,"0");e.classList.toggle("low",l<300)}
+function draw(){
+ const k=S.o[cur],q=TS.qs[k],ty=TS.ty,op=$("op");
+ $("qn").textContent=TS.t+": question "+(cur+1)+" of "+S.o.length+", "+TS.mk+" mark"+(TS.mk>1?"s":"");
+ $("qt").textContent=q.q;op.innerHTML="";$("wc").textContent="";
+ if(ty==="mcq")q.o.forEach((t,i)=>{const b=document.createElement("button");b.className="opt"+(S.a[k]===i?" sel":"");b.innerHTML="<b>"+"ABCD"[i]+"</b><span></span>";b.lastChild.textContent=t;b.onclick=()=>{S.a[k]=i;svS();draw();pal()};op.appendChild(b)});
+ else{const ta=document.createElement("textarea"),wc=()=>{if(ty==="write")$("wc").textContent=(ta.value.trim()?ta.value.trim().split(/\s+/).length:0)+" words"};
+  ta.className=ty==="code"?"code":"";ta.rows=ty==="code"?14:10;ta.spellcheck=false;ta.placeholder=ty==="code"?"Write your code here":"Write your answer here";ta.value=S.a[k]||"";
+  ta.oninput=()=>{S.a[k]=ta.value;svS();pal();wc()};
+  ta.onkeydown=e=>{if(e.key==="Tab"&&ty==="code"){e.preventDefault();ta.setRangeText("  ",ta.selectionStart,ta.selectionEnd,"end");ta.dispatchEvent(new Event("input"))}};
+  op.appendChild(ta);wc()}
+ $("pv").disabled=cur===0;$("nx").textContent=cur===S.o.length-1?"Finish test":"Next";conf=false;$("msg").textContent="";
+ [...$("pl").children].forEach((b,i)=>b.classList.toggle("cur",i===cur));
+}
+function pal(){const p=$("pl");if(!p.children.length)S.o.forEach((_,i)=>{const b=document.createElement("button");b.className="pb";b.textContent=i+1;b.onclick=()=>{cur=i;draw()};p.appendChild(b)});
+ [...p.children].forEach((b,i)=>b.classList.toggle("ans",ok(S.a[S.o[i]])))}
+$("pv").onclick=()=>{if(cur>0){cur--;draw()}};
+$("nx").onclick=()=>{if(cur<S.o.length-1){cur++;draw();return}
+ const un=S.o.filter(k=>!ok(S.a[k])).length;
+ if(!conf){conf=true;$("msg").textContent=(un?un+" unanswered. ":"")+"Tap Finish test again to submit.";return}fin()};
+async function fin(){
+ clearInterval(tm);if(S.d)return;S.d=true;S.x=S.o.length*TS.mk;
+ S.e=Math.min(DUR(),Math.floor((Date.now()-S.t0)/1000));locked=false;$("lk").classList.remove("on");
+ try{document.fullscreenElement&&document.exitFullscreen()}catch(e){}
+ try{const r=await api("POST","/api/submit",{tid:S.tid,r:S.r,k:S.k,a:S.a,v:S.v});S.s=r.s;S.x=r.x;S.ok=1}catch(e){S.ok=0}
+ svS();showEx(false);render();
+}
+const live=()=>S&&!S.d&&$("ex").classList.contains("on");
+const fs=()=>{try{document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen().catch(()=>{})}catch(e){}};
+function lock(why){if(!live()||locked||unlocking||Date.now()<unlockCooldown)return;locked=true;S.v++;svS();$("lw").textContent=why;$("cd").value="";$("ce").textContent="";$("lk").classList.add("on");setTimeout(()=>$("cd").focus(),50)}
+let unlocking=false,unlockCooldown=0;
+function unlock(){if(unlocking)return;unlocking=true;if($("cd").value.trim()===UNLOCK_CODE){locked=false;unlocking=false;unlockCooldown=Date.now()+1500;$("lk").classList.remove("on");fs()}else{$("ce").textContent="Wrong code. Ask the invigilator.";$("cd").value="";unlocking=false}}
+$("ub").onclick=unlock;$("cd").addEventListener("keydown",e=>{if(e.key==="Enter")unlock()});
+["copy","cut"].forEach(t=>document.addEventListener(t,e=>{if(live()){e.preventDefault();lock("Warning: copying is not allowed.")}}));
+document.addEventListener("contextmenu",e=>{if(live()){e.preventDefault();lock("Warning: right-click is not allowed.")}});
+document.addEventListener("keydown",e=>{if(!live())return;const k=e.key.toLowerCase(),c=e.ctrlKey||e.metaKey;
+ if(k==="f12"||(c&&["c","x","p","s","u","a"].includes(k))||(c&&e.shiftKey&&["i","j","c","s"].includes(k))){e.preventDefault();lock("Warning: copy, print, save or developer shortcuts are not allowed.")}});
+document.addEventListener("keyup",e=>{if(live()&&e.key==="PrintScreen"){try{navigator.clipboard.writeText("")}catch(x){}lock("Warning: screenshots are not allowed.")}});
+document.addEventListener("visibilitychange",()=>{if(document.hidden)lock("Warning: you left the test screen.")});
+window.addEventListener("blur",()=>lock("Warning: you left the test screen."));
+window.addEventListener("beforeprint",()=>lock("Warning: printing is not allowed."));
+document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement)lock("Warning: you exited full screen.")});
+
+(async()=>{
+ if(location.pathname==="/teacher"){mode="t";if(TOK)try{await loadAll()}catch(e){TOK="";sessionStorage.removeItem("tok")}render();return}
+ mode="s";S=L.g("s");
+ if(S&&!S.d&&S.k){
+  try{const x=await api("POST","/api/start",{id:S.tid,r:S.r,n:S.n,pc:S.pc});TS=x.t;S.k=x.k;S.o=x.o;S.t0=Date.now()-x.el*1000;
+   if(left()<=0)return fin();render();begin();lock("Warning: the page was reloaded or reopened.");return}catch(e){S=null;L.s("s",null)}}
+ render();
+})();
+</script></body></html>
