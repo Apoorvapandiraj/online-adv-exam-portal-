@@ -35,6 +35,21 @@ On Render, create a **Web Service** from this GitHub repository, use the build a
 
 Set `DATA_FILE` to the mounted volume path used by your provider. The server uses the host-provided `PORT` automatically.
 
+## Deploy on Railway
+
+The server starts with `npm start` (Railway's Railpack detects the Node app from `package.json`). If a custom start command is configured, set it to `npm start`.
+
+1. Add a PostgreSQL service to the Railway project.
+2. In the exam portal service's **Variables**, add:
+   - `NODE_ENV=production`
+   - `TEACHER_PASSWORD`: a strong teacher password.
+   - `ADMIN_ID`: a non-default admin ID.
+   - `ADMIN_PASSWORD`: a strong admin password.
+   - `DATABASE_URL=${{Postgres.DATABASE_URL}}`, replacing `Postgres` with the exact name of the PostgreSQL service.
+3. Review and deploy Railway's staged variable changes. The app creates its database table on first startup; `DATABASE_URL` avoids relying on Railway's temporary service filesystem.
+
+The production server deliberately exits when `NODE_ENV=production` but any required credential variable is missing. If the deployment crashes, open **Deploy Logs** for the exact missing variable names; the Railway **Variables** tab must show the four app settings above.
+
 ## Import and publish on Replit
 
 1. Import [this GitHub repository](https://replit.com/import/github/Apoorvapandiraj/online-adv-exam-portal-).

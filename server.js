@@ -4,9 +4,10 @@ const PORT = process.env.PORT || 3000;
 const PASS = process.env.TEACHER_PASSWORD || "teacher123";
 const FILE = process.env.DATA_FILE || path.join(__dirname, "data.json");
 const storage = createStorage({ filePath: FILE, databaseUrl: process.env.DATABASE_URL });
-if (process.env.NODE_ENV === "production" &&
-    (!process.env.TEACHER_PASSWORD || !process.env.ADMIN_ID || !process.env.ADMIN_PASSWORD)) {
-  throw new Error("Production startup requires TEACHER_PASSWORD, ADMIN_ID, and ADMIN_PASSWORD.");
+const missingProductionEnv = ["TEACHER_PASSWORD", "ADMIN_ID", "ADMIN_PASSWORD"]
+  .filter(name => !process.env[name]);
+if (process.env.NODE_ENV === "production" && missingProductionEnv.length) {
+  throw new Error("Production startup is missing required environment variables: " + missingProductionEnv.join(", ") + ".");
 }
 // ---- data model (additive migration; no existing field renamed or removed) ----
 const DEFAULTS = {

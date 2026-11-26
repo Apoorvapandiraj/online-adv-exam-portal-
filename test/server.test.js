@@ -1,11 +1,29 @@
 const assert = require("node:assert/strict");
-const { spawn } = require("node:child_process");
+const { spawn, spawnSync } = require("node:child_process");
 const { once } = require("node:events");
 const fs = require("node:fs/promises");
 const net = require("node:net");
 const os = require("node:os");
 const path = require("node:path");
 const test = require("node:test");
+
+test("production startup lists missing credential variables", () => {
+  const result = spawnSync(process.execPath, ["server.js"], {
+    cwd: path.join(__dirname, ".."),
+    env: {
+      ...process.env,
+      NODE_ENV: "production",
+      TEACHER_PASSWORD: "",
+      ADMIN_ID: "",
+      ADMIN_PASSWORD: "",
+      DATABASE_URL: ""
+    },
+    encoding: "utf8"
+  });
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /TEACHER_PASSWORD, ADMIN_ID, ADMIN_PASSWORD/);
+});
 
 async function findPort() {
   const listener = net.createServer();
