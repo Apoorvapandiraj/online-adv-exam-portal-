@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Exam Portal - Admin</title><link rel="stylesheet" href="admin.css?v=2"></head><body>
+<div class="sidebar" id="sidebar">
+  <h2>Exam Portal</h2>
+  <nav>
+    <a href="#" class="navlink" data-sec="overview">Overview</a>
+    <a href="#" class="navlink" data-sec="users">Users &amp; Rights</a>
+    <a href="#" class="navlink" data-sec="classes">Classes &amp; Students</a>
+    <a href="#" class="navlink" data-sec="tests">Tests</a>
+    <a href="#" class="navlink" data-sec="results">Results</a>
+    <a href="#" class="navlink" data-sec="settings">Settings</a>
+  </nav>
+  <div class="sep"></div>
+  <button class="btn alt logout-btn" id="logoutBtn" data-a="logout">Logout</button>
+</div>
+<div class="main">
+  <div class="appbar"><div><div style="font-weight:700;font-size:1.1rem">Admin Dashboard</div><div class="mut" id="me"></div></div><button class="btn alt" id="menuBtn" style="display:none">Menu</button></div>
+
+  <!-- Overview -->
+  <div class="section" id="sec-overview">
+    <h2>Overview</h2>
+    <div class="row" id="stats"></div>
+    <div class="card"><div class="mut">Live attempts = started but not submitted and not yet expired.</div></div>
+  </div>
+
+  <!-- Users & Rights -->
+  <div class="section" id="sec-users">
+    <h2>Users &amp; Rights</h2>
+    <div class="card">
+      <h3 style="margin:0 0 10px">Add user</h3>
+      <label>User ID</label><input id="uid" type="text" placeholder="jdoe">
+      <label>Full name</label><input id="uname" type="text" placeholder="John Doe">
+      <label>Role</label><select id="urole"><option value="teacher">Teacher</option><option value="admin">Admin</option></select>
+      <label>Password</label><input id="upass" type="password" placeholder="min 6 chars">
+      <div class="mut">Permissions (teacher = all except manage_users)</div>
+      <div class="perm-grid" id="uperms"></div>
+      <button class="btn" data-a="useradd">Add user</button><p id="uerr" class="err"></p>
+    </div>
+    <div class="card">
+      <h3 style="margin:0 0 10px">Users</h3>
+      <div id="usertable"></div>
+    </div>
+  </div>
+
+  <!-- Classes & Students -->
+  <div class="section" id="sec-classes">
+    <h2>Classes &amp; Students</h2>
+    <div class="card">
+      <h3 style="margin:0 0 10px">Create class</h3>
+      <label>Class name</label><input id="cname" type="text" placeholder="MCA Sem 3 Section A">
+      <button class="btn" data-a="classadd">Create class</button><p id="cerr" class="err"></p>
+    </div>
+    <div class="card">
+      <h3 style="margin:0 0 10px">Classes</h3>
+      <div id="classtable"></div>
+    </div>
+  </div>
+
+  <!-- Tests -->
+  <div class="section" id="sec-tests">
+    <h2>Tests</h2>
+    <div id="testtable"></div>
+  </div>
+
+  <!-- Results -->
+  <div class="section" id="sec-results">
+    <h2>Results</h2>
+    <div class="row" style="margin-bottom:10px">
+      <select id="rfilter" style="width:auto"></select>
+      <input id="rsearch" type="text" placeholder="Filter by student name/roll" style="width:auto">
+    </div>
+    <div id="resulttable"></div>
+  </div>
+
+  <!-- Settings -->
+  <div class="section" id="sec-settings">
+    <h2>Settings</h2>
+    <div class="card">
+      <label>Unlock code (invigilator)</label><input id="sunlock" type="text" placeholder="1234">
+      <button class="btn" data-a="setunlock">Change unlock code</button><p id="serr" class="err"></p>
+      <p class="mut">Students see a lock screen; the invigilator enters this code to unlock.</p>
+    </div>
+  </div>
+</div>
+<script src="admin.js?v=2"></script></body></html>

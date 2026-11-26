@@ -1,34 +1,57 @@
-# Exam Portal (teacher dashboard + student exams)
+# online-adv-exam-portal-
 
-Teachers create classes and tests (MCQ, Coding, Writing) with a time limit and passcode,
-then share one link. Students enter name, roll number and passcode, and take a timed test.
-Copy, screenshot, tab-switch and full-screen-exit attempts lock the test until the
-invigilator enters code 1234. MCQ is auto-graded on the server; coding and writing are graded by the teacher.
+Online exam portal with a student exam screen, teacher dashboard, and admin dashboard.
+Teachers create classes and timed MCQ, coding, or writing tests and share them with students.
+MCQ tests are graded automatically; teachers grade coding and writing submissions.
 
-## Run it
+## Run locally
+
 1. Install Node.js 18 or newer.
-2. In this folder run:  `npm install`  then  `npm start`
-3. Teacher dashboard:  http://localhost:3000/teacher   (default password: teacher123)
+2. In this folder run:
+   ```sh
+   npm ci
+   npm start
+   ```
+3. Open the teacher dashboard at `http://localhost:3000/teacher` or the admin dashboard at `http://localhost:3000/admin`.
 
-Set your own password:
-- Windows (PowerShell):  `$env:TEACHER_PASSWORD="mypass"; npm start`
-- Mac/Linux:  `TEACHER_PASSWORD=mypass npm start`
+For local development only, the default teacher password is `teacher123` and the default admin login is `admin` / `admin123`.
 
-## Share the student link
-- Same Wi-Fi: the terminal prints an address like http://192.168.1.20:3000. Open /teacher on that
-  address, create the test, and send students the link shown (it already has that address).
-- Over the internet: deploy to Render, Railway or any Node host (start command `npm start`,
-  set TEACHER_PASSWORD). Create tests from the deployed /teacher page so the link uses the public address.
-  Free hosts can erase data.json on restart: attach a persistent disk and set DATA_FILE to a path on it.
+## Deploy to a Node.js host
 
-## Test question format (paste or upload .txt / .csv)
-- MCQ:  `question | option A | option B | option C | option D | correct letter`
-- Coding or Writing: one question per line
+This application runs an Express server; GitHub Pages alone cannot host it.
 
-## Files
-- server.js: Express API, data saved to data.json
-- public/index.html: teacher dashboard and student exam screens
+- Use Node.js 18 or newer.
+- Build/install command: `npm ci`
+- Start command: `npm start`
+- Configure these environment variables **before the first start**:
+  - `NODE_ENV=production`
+  - `TEACHER_PASSWORD`: a strong teacher password.
+  - `ADMIN_ID`: a non-default admin ID.
+  - `ADMIN_PASSWORD`: a strong admin password.
+- Attach persistent storage and set `DATA_FILE` to a file on that volume (for example, `/var/data/data.json`). Without persistent storage, classes, tests, users, and results may be lost when the host restarts or redeploys.
+- Keep `.env`, `data.json`, and backups private; these are excluded from Git.
 
-## Known limits
-Browsers cannot fully block phone screenshots or a second device. The unlock code (1234) is
-set in public/index.html (`const CODE`). Student answers are stored on the server only after submit.
+On Render, create a **Web Service** from this GitHub repository, use the build and start commands above, add the environment variables, and attach a persistent disk. Create classes and tests from the deployed teacher dashboard so the generated links use the public host address.
+
+Set `DATA_FILE` to the mounted volume path used by your provider. The server uses the host-provided `PORT` automatically.
+
+## Student test links
+
+On the same Wi-Fi, open the teacher dashboard using the server's LAN address, create a test, and share the generated link and passcode. For internet hosting, create tests on the deployed site and share its generated public link.
+
+## Question format
+
+Paste or upload a `.txt` or `.csv` file:
+- MCQ: `question | option A | option B | option C | option D | correct letter`
+- Coding or writing: one question per line
+
+## Project files
+
+- `server.js`: Express API and server.
+- `public/index.html`: teacher login/dashboard and student exam experience.
+- `public/admin.html`, `public/admin.css`, `public/admin.js`: admin dashboard.
+- `data.json`: local JSON storage, created when the server runs; do not commit it.
+
+## Limitations
+
+Browser-based controls cannot prevent screenshots on every device or stop a student from using a second device. The invigilator unlock code is configured in the frontend. Student answers are submitted to the server when the test is submitted.

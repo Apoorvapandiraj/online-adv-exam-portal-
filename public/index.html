@@ -3,11 +3,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Exam Portal</title>
 <style>
-:root{--bg:#020617;--ink:#f8fafc;--mut:#94a3b8;--card:#0f172a;--line:#334155;--brand:#3b82f6;--brand-glow:#3b82f640;--bi:#ffffff;--sel:#1e293b;--accent:#f59e0b;--warn:#f59e0b;--wbg:#1c2536;--ok:#22c55e;--danger:#ef4444;--shadow:0 10px 30px -10px rgba(0,0,0,0.5);--shadow-sm:0 4px 6px -1px rgba(0,0,0,0.3);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){color-scheme:light;--bg:#f8fafc;--ink:#0f172a;--mut:#64748b;--card:#ffffff;--line:#e2e8f0;--brand:#2563eb;--brand-glow:#2563eb20;--bi:#ffffff;--sel:#f1f5f9;--warn:#d97706;--wbg:#fef3c7;--ok:#16a34a;--danger:#dc2626;--shadow:0 10px 30px -10px rgba(0,0,0,0.1);--shadow-sm:0 4px 6px -1px rgba(0,0,0,0.05)}}
-:root[data-theme="dark"]{color-scheme:dark;--bg:#020617;--ink:#f8fafc;--mut:#94a3b8;--card:#0f172a;--line:#334155;--brand:#3b82f6;--brand-glow:#3b82f640;--bi:#ffffff;--sel:#1e293b;--accent:#f59e0b;--warn:#f59e0b;--wbg:#1c2536;--ok:#22c55e;--danger:#ef4444;--shadow:0 10px 30px -10px rgba(0,0,0,0.5);--shadow-sm:0 4px 6px -1px rgba(0,0,0,0.3)}
+:root{color-scheme:light;--bg:#ffffff;--ink:#111111;--mut:#525252;--card:#ffffff;--line:#d4d4d4;--brand:#111111;--brand-glow:rgba(0,0,0,0.12);--bi:#ffffff;--sel:#e5e5e5;--accent:#262626;--warn:#404040;--wbg:#f5f5f5;--ok:#e5e5e5;--danger:#b91c1c;--shadow:0 10px 30px -10px rgba(0,0,0,0.16);--shadow-sm:0 4px 6px -1px rgba(0,0,0,0.08);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(135deg, var(--bg) 0%, var(--card) 100%),radial-gradient(circle at top right, rgba(59,130,246,0.08), transparent 50%);background-attachment:fixed}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(135deg,var(--bg) 0%,#f5f5f5 100%);background-attachment:fixed}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--card)}
 body.x{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 input,textarea{-webkit-user-select:text;user-select:text}
@@ -16,20 +14,22 @@ h2{font-size:1.25rem;margin:0 0 4px;font-weight:700}
 #ex{display:none}#ex.on{display:block}
 .wrap{max-width:800px;margin:0 auto;padding:20px 16px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:var(--shadow-sm);transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}
-.card:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:rgba(59,130,246,0.3)}
+.card:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:#a3a3a3}
 .row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .mut{color:var(--mut);font-size:.875rem}
 .rules{margin:0 0 16px;padding:14px 18px;border-left:4px solid var(--accent);background:var(--wbg);border-radius:10px;font-size:.9rem;color:var(--ink)}
 label{display:block;font-weight:600;margin:12px 0 6px;font-size:.9rem;color:var(--ink)}
 input[type=text],input[type=password],input[type=number],select,textarea{width:100%;box-sizing:border-box;padding:12px 14px;font:inherit;font-size:15px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);transition:border-color .2s ease,box-shadow .2s ease}
 input[type=text]:focus,input[type=password]:focus,input[type=number]:focus,select:focus,textarea:focus{border-color:var(--brand);outline:none;box-shadow:0 0 0 3px var(--brand-glow)}
+.tog{background:none;border:none;color:var(--mut);cursor:pointer;font:inherit;font-size:13px;padding:2px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg)}
+.tog:hover{color:var(--ink);border-color:var(--brand)}
 textarea.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.5;white-space:pre;overflow:auto}
 .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .btn,.tab{padding:12px 20px;font:inherit;font-weight:600;border-radius:10px;border:1px solid var(--brand);background:var(--brand);color:var(--bi);cursor:pointer;transition:all .2s ease;box-shadow:0 4px 14px 0 var(--brand-glow)}
-.btn:hover{background:#2563eb;transform:translateY(-1px);box-shadow:0 6px 20px 0 var(--brand-glow)}
+.btn:hover{background:#333333;transform:translateY(-1px);box-shadow:0 6px 20px 0 var(--brand-glow)}
 .btn:active{transform:translateY(0)}
 .btn.alt,.tab{background:transparent;color:var(--brand)}
-.btn.alt:hover{background:rgba(59,130,246,0.1)}
+.btn.alt:hover{background:rgba(0,0,0,0.06)}
 .tab{padding:10px 16px;font-size:.9rem}
 .tab.on{background:var(--brand);color:var(--bi)}
 .btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
@@ -39,14 +39,13 @@ textarea.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;l
 .err{color:var(--danger);min-height:1.3em;margin:8px 0 0;font-size:.875rem}
 .link{background:var(--sel);border:1px solid var(--line)}
 code{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--bg);padding:2px 8px;border-radius:6px;border:1px solid var(--line);font-size:.875em}
-#hd{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(15,23,42,0.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+#hd{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(255,255,255,0.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 #hd .in{max-width:800px;margin:0 auto;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.logo{width:44px;height:44px;border-radius:50%;display:block;background:#fff;padding:3px;box-shadow:0 0 20px rgba(59,130,246,0.7),0 0 40px rgba(59,130,246,0.5);animation:logoGlow 3s ease-in-out infinite alternate}
-@keyframes logoGlow{from{box-shadow:0 0 20px rgba(59,130,246,0.7),0 0 40px rgba(59,130,246,0.5)}to{box-shadow:0 0 35px rgba(59,130,246,1),0 0 60px rgba(59,130,246,0.8)}}
+.logo{width:44px;height:44px;flex:none;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;background:#fff;color:var(--ink);font-size:.8rem;font-weight:800;box-shadow:0 4px 12px rgba(0,0,0,0.16)}
 #tm{font:700 1.5rem Georgia,serif;font-variant-numeric:tabular-nums}#tm.low{color:var(--accent)}
 .q{font-size:1.25rem;line-height:1.5;margin:8px 0 20px;color:var(--ink)}
 .opt{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;padding:14px 16px;margin-bottom:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;cursor:pointer;transition:all .15s ease}
-.opt:hover{border-color:var(--brand);background:rgba(59,130,246,0.05)}
+.opt:hover{border-color:var(--brand);background:rgba(0,0,0,0.03)}
 .opt b{flex:none;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-size:.9rem;font-weight:700;background:var(--bg)}
 .opt.sel{border-color:var(--brand);background:var(--brand-glow)}
 .opt.sel b{background:var(--brand);color:var(--bi);border-color:var(--brand)}
@@ -56,7 +55,7 @@ code{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--bg);padd
 .pb:hover{border-color:var(--brand)}
 .pb.ans{background:var(--brand);border-color:var(--brand);color:#fff}
 .pb.cur{outline:2px solid var(--brand);font-weight:700;background:var(--sel)}
-#lk{position:fixed;inset:0;z-index:50;background:rgba(2,6,23,0.95);backdrop-filter:blur(20px);display:none;align-items:center;justify-content:center;padding:calc(20px + env(safe-area-inset-top,0px)) 16px calc(20px + env(safe-area-inset-bottom,0px))}
+#lk{position:fixed;inset:0;z-index:50;background:rgba(255,255,255,0.96);backdrop-filter:blur(20px);display:none;align-items:center;justify-content:center;padding:calc(20px + env(safe-area-inset-top,0px)) 16px calc(20px + env(safe-area-inset-bottom,0px))}
 #lk.on{display:flex}#lk .card{max-width:440px;width:100%;text-align:center}#lk h2{color:var(--ink);font-size:1.75rem}
 #lk .mut{color:var(--mut);margin-bottom:16px}
 .big{font-size:4rem;line-height:1;margin:12px 0;color:var(--brand);font-weight:800}
@@ -65,11 +64,11 @@ code{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--bg);padd
 pre{white-space:pre-wrap;background:var(--bg);padding:14px;border-radius:12px;margin:10px 0;font-size:.9rem;border:1px solid var(--line)}
 @media print{body{display:none}}
 @media(max-width:480px){.g3{grid-template-columns:1fr}}
-.login-wrap{position:fixed;inset:0;z-index:0;background-image:url("login-bg.jpg?v=1");background-size:cover;background-position:center;background-attachment:fixed;display:flex;align-items:center;justify-content:center;padding:20px}
-.login-wrap::after{content:"";position:absolute;inset:0;background:rgba(2,6,23,0.7);z-index:0}
-.login-wrap .card{position:relative;z-index:1;max-width:400px;width:100%;background:rgba(15,23,42,0.85);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.1)}
+.login-wrap{position:fixed;inset:0;z-index:0;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
+.login-wrap::after{content:"";position:absolute;inset:0;background:rgba(255,255,255,0.88);z-index:0}
+.login-wrap .card{position:relative;z-index:1;max-width:400px;width:100%;background:rgba(255,255,255,0.96);backdrop-filter:blur(12px);border:1px solid var(--line)}
 .login-wrap h2,.login-wrap label,.login-wrap .mut{color:var(--ink)}
-.login-wrap input[type=password]{background:rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.2);color:var(--ink)}
+.login-wrap input[type=password]{background:#ffffff;border:1px solid var(--line);color:var(--ink)}
 .login-wrap input[type=password]:focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-glow)}
 </style></head><body>
 <div id="app" class="wrap"></div>
@@ -85,7 +84,7 @@ pre{white-space:pre-wrap;background:var(--bg);padding:14px;border-radius:12px;ma
 const UNLOCK_CODE="1234";
 const $=i=>document.getElementById(i),esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const rid=()=>Math.random().toString(36).slice(2,8),cl=o=>JSON.parse(JSON.stringify(o));
-let db=null,user=null,isT=false,uid="local",mode="s",tab="tests",C=[],T=[],last=null,rt="",RR=[],S=null,TS=null,tm=null,locked=false,cur=0,conf=false;
+let db=null,user=null,isT=false,uid="local",mode="s",tab="tests",C=[],T=[],last=null,rt="",RR=[],S=null,TS=null,tm=null,locked=false,cur=0,conf=false,adminOpen=false;
 let TOK=sessionStorage.getItem("tok")||"";
 const PID=(location.pathname.match(/^\/t\/([\w-]+)/)||[])[1]||"";
 async function api(m,u,b){const r=await fetch(u,{method:m,headers:{"Content-Type":"application/json","x-token":TOK},body:b?JSON.stringify(b):undefined});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||"Something went wrong. Try again.");return d}
@@ -93,6 +92,7 @@ const L={g(k){try{return JSON.parse(localStorage.getItem("m1:"+k))}catch(e){retu
 function say(m){const t=$("toast");t.textContent=m;t.style.display="block";clearTimeout(say.t);say.t=setTimeout(()=>t.style.display="none",4000)}
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const svS=()=>L.s("s",S);
+function tcw(){const c=C.find(x=>x.id===document.getElementById("tc").value);const w=$("tcwarn");if(!c){w.style.display="none";return}if(c.restricted&&!c.st.length){w.style.display="block"}else{w.style.display="none"}}
 async function loadAll(){C=await api("GET","/api/classes");T=await api("GET","/api/tests")}
 
 function parse(txt,ty){return txt.split(/\r?\n/).map(l=>l.trim()).filter(Boolean).map(l=>{const x=(l.includes("|")?l.split("|"):l.split(",")).map(s=>s.trim());
@@ -100,9 +100,10 @@ function parse(txt,ty){return txt.split(/\r?\n/).map(l=>l.trim()).filter(Boolean
  return x[0]?{q:l}:null}).filter(Boolean)}
 const TN={mcq:"MCQ",code:"Coding",write:"Writing"};
 
-const hdr=()=>`<div class="top"><img src="logo.png?v=1" class="logo" alt="Logo"><h2>Exam Portal</h2>${mode==="t"&&TOK?'<button class="tab" data-a="logout">Log out</button>':""}</div>`;
-const loginView=()=>`<div class="login-wrap"><div class="card"><h2>Teacher login</h2><label for="pw">Password</label><input id="pw" type="password"><p class="mut">Default password is teacher123. Change it with the TEACHER_PASSWORD setting.</p><button class="btn" data-a="login">Log in</button></div></div>`;
-function render(){$("app").innerHTML=hdr()+(mode==="t"?(TOK?tView():loginView()):sView());document.body.classList.remove("x")}
+const hdr=()=>`<div class="top"><span class="logo" role="img" aria-label="Exam Portal">EP</span><h2>Exam Portal</h2>${mode==="t"&&TOK?'<button class="tab" data-a="logout">Log out</button>':""}</div>`;
+const loginView=()=>`<div class="login-wrap"><div class="card"><h2>Teacher login</h2><label for="pw">Password</label><input id="pw" type="password"><p class="mut">Default password is teacher123. Change it with the TEACHER_PASSWORD setting.</p><button class="btn" data-a="login">Log in</button><p class="mut"><button class="btn alt" data-a="adminopen" style="display:inline-block;margin-top:10px;padding:8px 14px">Admin Login</button></p></div></div>`;
+const adminView=()=>`<div class="login-wrap"><div class="card"><h2>Admin Login</h2><label for="aid">Admin ID</label><input id="aid" type="text" placeholder="admin"><label for="apw">Password</label><div style="position:relative"><input id="apw" type="password" placeholder="admin123"><button type="button" class="tog" data-a="togpw">Show</button></div><p id="aerr" class="err"></p><button class="btn" data-a="adminlogin">Log in</button><p class="mut"><button class="btn alt" data-a="adminback" style="display:inline-block;padding:8px 14px">Back to teacher login</button></p></div></div>`;
+function render(){$("app").innerHTML=hdr()+(adminOpen?adminView():mode==="t"?(TOK?tView():loginView()):sView());document.body.classList.remove("x")}
 function tView(){
  const tabs=["classes","tests","results"].map(t=>`<button class="tab${tab===t?" on":""}" data-a="tab" data-v="${t}">${t[0].toUpperCase()+t.slice(1)}</button>`).join("");
  return `<div class="tabs">${tabs}</div>`+(tab==="classes"?vClasses():tab==="tests"?vTests():vRes());
@@ -111,13 +112,13 @@ const vClasses=()=>`<div class="card"><h2>New class</h2><label for="cn">Class na
 <label for="cr">Student roll list (optional, one per line: roll, name)</label><textarea id="cr" rows="5" placeholder="21MCA001, Asha Rao"></textarea>
 <p class="mut">If you add a roll list, only those roll numbers can start tests assigned to this class.</p><button class="btn" data-a="mkclass">Create class</button></div>`
  +(C.length?"":'<p class="mut">No classes yet. Create one, then assign tests to it.</p>')
- +C.map(c=>`<div class="card row"><b>${esc(c.name)}</b><span class="mut">${c.st.length} on roll list, ${T.filter(t=>t.cid===c.id).length} tests</span></div>`).join("");
+ +C.map(c=>`<div class="card row"><b>${esc(c.name)}</b>${c.restricted?`<span class="btn alt" style="font-size:.75rem;padding:4px 8px;margin-left:8px">Restricted</span>`:`<span style="color:var(--warn);font-size:.75rem;margin-left:8px">Open to anyone · add students to restrict</span>`}<span class="mut">${c.st.length} on roll list, ${T.filter(t=>t.cid===c.id).length} tests</span></div>`).join("");
 const vTests=()=>{
  const lk=last?T.find(t=>t.id===last):null;
  return (lk?`<div class="card link"><h2>Test ready to share</h2><p>Send students this link and give the passcode separately.</p><p><code>${location.origin}/t/${lk.id}</code></p><p>Test ID: <code>${lk.id}</code> Passcode: <code>${esc(lk.pc)}</code></p><button class="btn alt" data-a="copy" data-v="${location.origin}/t/${lk.id}">Copy link</button></div><div class="card wbg"><h3 style="margin:0 0 6px">Invigilator unlock code</h3><p class="mut" style="margin:0">If a student is locked out of a test, enter this code on the unlock screen: <b style="font-size:1.3rem">${UNLOCK_CODE}</b></p></div>`:"")
  +`<div class="card"><h2>Create a test</h2>
  <label for="tt">Test title</label><input id="tt" type="text" placeholder="Module 1 test">
- <div class="g3"><div><label for="tc">Class</label><select id="tc">${C.length?C.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join(""):'<option value="">Create a class first</option>'}</select></div>
+ <div class="g3"><div><label for="tc">Class</label><select id="tc" onchange="tcw()">${C.length?C.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join(""):'<option value="">Create a class first</option>'}</select><div id="tcwarn" class="err" style="display:none;font-size:.85rem;margin-top:4px">This class has no enrolled students — nobody will be able to enter this test.</div></div>
  <div><label for="ty">Test type</label><select id="ty"><option value="mcq">MCQ</option><option value="code">Coding</option><option value="write">Writing</option></select></div>
  <div><label for="tmn">Time (minutes)</label><input id="tmn" type="number" min="1" value="25"></div></div>
  <div class="g3"><div><label for="qn2">Questions per student</label><input id="qn2" type="number" min="1" placeholder="All"></div>
@@ -154,6 +155,10 @@ const act={
  mode(a){mode=a.dataset.v;render()},
  tab(a){tab=a.dataset.v;render()},
  async login(){try{const r=await api("POST","/api/login",{password:$("pw").value});TOK=r.token;sessionStorage.setItem("tok",TOK);await loadAll();render()}catch(e){say(e.message)}},
+  adminopen(){adminOpen=true;try{$("aerr").textContent=""}catch(e){}render()},
+  adminback(){adminOpen=false;render()},
+  togpw(a){const inp=$("apw");if(!inp)return;inp.type=inp.type==="password"?"text":"password";a.textContent=inp.type==="password"?"Show":"Hide"},
+  async adminlogin(){try{$("aerr").textContent="";await api("POST","/api/admin-login",{id:$("aid").value.trim(),password:$("apw").value});window.location.href="/admin"}catch(e){$("aerr").textContent=e.message}},
  logout(){TOK="";sessionStorage.removeItem("tok");render()},
  copy(a){try{navigator.clipboard.writeText(a.dataset.v);say("Link copied.")}catch(e){say("Select the link and copy it.")}},
  async mkclass(){const n=$("cn").value.trim();if(!n)return say("Enter a class name.");
@@ -161,6 +166,7 @@ const act={
  async mktest(){
   const g=i=>$(i).value.trim(),ty=g("ty"),qs=parse($("qb").value,ty),m=+g("tmn"),mk=+g("mk")||1,pc=g("pc"),c=C.find(x=>x.id===g("tc"));
   if(!g("tt")||!c)return say("Add a title and choose a class.");
+  if(c.restricted&&!c.st.length)return say("This class has no enrolled students — add students first.");
   if(!qs.length)return say("No valid questions found. Check the format shown under the box.");
   if(!m||!pc)return say("Set the time and a passcode.");
   try{const r=await api("POST","/api/tests",{t:g("tt"),ty,cid:c.id,m,n:+g("qn2")||qs.length,mk,pc,qs});await loadAll();last=r.id;render();window.scrollTo(0,0)}catch(e){say(e.message)}},
@@ -175,7 +181,7 @@ const act={
    if(left()<=0)return fin();fs();begin()}catch(e){say(e.message)}},
  again(){S=null;TS=null;L.s("s",null);render()}
 };
-document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id==="pw")act.login()});
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id==="pw")act.login();if(e.key==="Enter"&&e.target.id==="apw")act.adminlogin()});
 document.addEventListener("click",e=>{const a=e.target.closest("[data-a]");if(a&&a.tagName!=="SELECT"&&act[a.dataset.a])act[a.dataset.a](a)});
 document.addEventListener("change",e=>{if(e.target.id==="rs")act.res(e.target);if(e.target.id==="qf"&&e.target.files[0]){const r=new FileReader();r.onload=()=>{$("qb").value=($("qb").value?$("qb").value+"\n":"")+r.result};r.readAsText(e.target.files[0])}});
 
