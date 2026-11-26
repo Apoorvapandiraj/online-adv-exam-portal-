@@ -35,6 +35,20 @@ On Render, create a **Web Service** from this GitHub repository, use the build a
 
 Set `DATA_FILE` to the mounted volume path used by your provider. The server uses the host-provided `PORT` automatically.
 
+## Import and publish on Replit
+
+1. Import [this GitHub repository](https://replit.com/import/github/Apoorvapandiraj/online-adv-exam-portal-).
+2. Open the **Database** tool in Replit and connect a PostgreSQL database to the app. The server uses Replit's `DATABASE_URL` automatically and creates its state table on first startup. Keep `DATABASE_URL` available to the published app as well; Replit development and production databases are separate.
+3. Add these values in Replit **Secrets** before running or publishing:
+   - `NODE_ENV=production`
+   - `TEACHER_PASSWORD`: a strong teacher password.
+   - `ADMIN_ID`: a non-default admin ID.
+   - `ADMIN_PASSWORD`: a strong admin password.
+4. Run the app and confirm the teacher and admin pages load. Publish it as a **web app**, not a Static deployment. Use a single-instance deployment such as **Reserved VM** because login sessions are held in server memory.
+5. After publishing, open the teacher dashboard on the public URL and create your classes and tests there.
+
+The included `.replit` file sets `npm start` as the run command. Replit supplies `PORT`; do not commit database credentials or application passwords.
+
 ## Student test links
 
 On the same Wi-Fi, open the teacher dashboard using the server's LAN address, create a test, and share the generated link and passcode. For internet hosting, create tests on the deployed site and share its generated public link.

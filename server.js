@@ -1,7 +1,9 @@
-const express = require("express"), fs = require("fs"), path = require("path"), os = require("os"), crypto = require("crypto");
+const express = require("express"), path = require("path"), os = require("os"), crypto = require("crypto");
+const { createStorage } = require("./storage");
 const PORT = process.env.PORT || 3000;
 const PASS = process.env.TEACHER_PASSWORD || "teacher123";
 const FILE = process.env.DATA_FILE || path.join(__dirname, "data.json");
+const storage = createStorage({ filePath: FILE, databaseUrl: process.env.DATABASE_URL });
 if (process.env.NODE_ENV === "production" &&
     (!process.env.TEACHER_PASSWORD || !process.env.ADMIN_ID || !process.env.ADMIN_PASSWORD)) {
   throw new Error("Production startup requires TEACHER_PASSWORD, ADMIN_ID, and ADMIN_PASSWORD.");
@@ -16,7 +18,6 @@ const DEFAULTS = {
   settings: { unlockCode: "1234" }
 };
 let D = Object.assign({}, DEFAULTS);
-let dirty = false;
 function ensureDefaults() {
   for (const k of Object.keys(DEFAULTS)) if (D[k] === undefined) D[k] = DEFAULTS[k];
   if (!D.settings || typeof D.settings !== "object") D.settings = {};
@@ -35,12 +36,6 @@ function ensureDefaults() {
     if (!Array.isArray(t.qs)) t.qs = [];
   }
 }
-try { ensureDefaults(); const loaded = JSON.parse(fs.readFileSync(FILE, "utf8"));
-  D = Object.assign({}, DEFAULTS, loaded);
-  ensureDefaults();
-  dirty = true; // migration added users/settings/restricted keys
-} catch (e) { D = Object.assign({}, DEFAULTS); dirty = true; }
-
 // ---- scrypt password hashing (salt stored with hash; never returned in responses) ----
 const hashPassword = (password) => new Promise((resolve, reject) => {
   const salt = crypto.randomBytes(16).toString("hex");
@@ -61,21 +56,17 @@ const verifyPassword = (password, stored) => new Promise((resolve, reject) => {
   });
 });
 
-// ---- atomic queued writes (temp file + rename; serialized so data.json never corrupts) ----
-let writeQueue = Promise.resolve(), writeTimer = null;
-function flushWrite() {
-  return new Promise((resolve) => {
-    const tmp = FILE + ".tmp." + process.pid;
-    fs.writeFile(tmp, JSON.stringify(D), (err) => {
-      if (!err) fs.rename(tmp, FILE, () => resolve());
-      else resolve();
-    });
-  });
+// ---- serialized persistence writes ----
+let writeTimer = null;
+function enqueueWrite() {
+  const pendingWrite = storage.save(D);
+  pendingWrite.catch(error => console.error("Failed to persist application data:", error));
+  return pendingWrite;
 }
-function enqueueWrite() { writeQueue = writeQueue.then(flushWrite); }
-const save = () => { clearTimeout(writeTimer); writeTimer = setTimeout(enqueueWrite, 200); };
-const saveNow = () => { clearTimeout(writeTimer); enqueueWrite(); };
-if (dirty) saveNow(); // persist migration (users, settings, restricted flags)
+const save = () => {
+  clearTimeout(writeTimer);
+  writeTimer = setTimeout(enqueueWrite, 200);
+};
 
 const rid = () => crypto.randomBytes(4).toString("hex");
 const err = (s, m, c = 400) => s.status(c).json({ error: m });
@@ -135,7 +126,7 @@ const ALL_PERMS = ["manage_users","manage_classes","manage_students","create_tes
 const TEACHER_PERMS = ALL_PERMS.filter(p => p !== "manage_users");
 
 // ---- seed users (teacher built-in + admin from env) ----
-function seedUsers() {
+async function seedUsers() {
   let changed = false;
   // built-in teacher (maps to existing teacher login, password TEACHER_PASSWORD)
   if (!D.users.teacher) {
@@ -148,25 +139,27 @@ function seedUsers() {
   if (!D.users[adminId]) {
     D.users[adminId] = { id: adminId, name: "Admin", role: "admin", hash: null, salt: null, permissions: ALL_PERMS, active: true, at: Date.now() };
     changed = true;
-    console.log("\n!!! DEFAULT ADMIN SEEDED !!!");
-    console.log("  Admin ID: " + adminId + "  Password: " + adminPass);
-    console.log("  CHANGE THESE CREDENTIALS (ADMIN_ID / ADMIN_PASSWORD env vars) before production use.\n");
+    console.log("\nAdmin account seeded. Configure ADMIN_ID and ADMIN_PASSWORD before production use.\n");
   } else {
     // ensure admin has all perms + is active
     const a = D.users[adminId];
-    if (a.role === "admin") { a.permissions = ALL_PERMS; a.active = true; }
+    if (a.role === "admin") {
+      if (JSON.stringify(a.permissions) !== JSON.stringify(ALL_PERMS) || !a.active) changed = true;
+      a.permissions = ALL_PERMS.slice();
+      a.active = true;
+    }
   }
   // hash any user with null hash using their default password (store "salt:hash" combined)
   if (D.users.teacher && !D.users.teacher.hash) {
-    hashPassword(PASS).then(h => { D.users.teacher.hash = h; });
+    D.users.teacher.hash = await hashPassword(PASS);
+    changed = true;
   }
   if (D.users[adminId] && !D.users[adminId].hash) {
-    hashPassword(adminPass).then(h => { D.users[adminId].hash = h; });
+    D.users[adminId].hash = await hashPassword(adminPass);
+    changed = true;
   }
   return changed;
 }
-const seedChanged = seedUsers();
-if (seedChanged) saveNow(); // persist seeded users
 const app = express();
 app.use(express.json({ limit: "5mb" }));
 
@@ -390,9 +383,56 @@ app.post("/api/submit", (q, s) => {
 app.use(express.static(path.join(__dirname, "public")));
 app.get(["/teacher", "/t/:id"], (q, s) => s.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/admin", (q, s) => s.sendFile(path.join(__dirname, "public", "admin.html")));
-app.listen(PORT, "0.0.0.0", () => {
-  console.log("\nExam Portal running");
-  console.log("  Teacher dashboard: http://localhost:" + PORT + "/teacher   (password: " + PASS + ")");
-  console.log("  Admin dashboard:   http://localhost:" + PORT + "/admin   (default admin / admin123, change via ADMIN_ID/ADMIN_PASSWORD)");
-  for (const l of Object.values(os.networkInterfaces()).flat()) if (l && l.family === "IPv4" && !l.internal) console.log("  On your Wi-Fi/LAN:  http://" + l.address + ":" + PORT);
+async function startServer() {
+  const loaded = await storage.initialize(DEFAULTS);
+  D = Object.assign({}, DEFAULTS, loaded.state);
+  const stateBeforeMigration = JSON.stringify(D);
+  ensureDefaults();
+  const migrated = JSON.stringify(D) !== stateBeforeMigration;
+  const seeded = await seedUsers();
+  if (loaded.needsSave || migrated || seeded) await storage.save(D);
+
+  const server = app.listen(PORT, "0.0.0.0", () => {
+    console.log("\nExam Portal running");
+    console.log("  Teacher dashboard: http://localhost:" + PORT + "/teacher");
+    console.log("  Admin dashboard:   http://localhost:" + PORT + "/admin");
+    for (const l of Object.values(os.networkInterfaces()).flat()) if (l && l.family === "IPv4" && !l.internal) console.log("  On your Wi-Fi/LAN:  http://" + l.address + ":" + PORT);
+  });
+  server.on("error", async error => {
+    console.error("Failed to start the HTTP server:", error);
+    process.exitCode = 1;
+    try {
+      await storage.close();
+    } catch (closeError) {
+      console.error("Failed to close application storage:", closeError);
+    }
+  });
+
+  let shuttingDown = false;
+  const shutdown = () => {
+    if (shuttingDown) return;
+    shuttingDown = true;
+    server.close(async () => {
+      clearTimeout(writeTimer);
+      try {
+        await enqueueWrite();
+        await storage.close();
+      } catch (error) {
+        console.error("Failed to shut down cleanly:", error);
+        process.exitCode = 1;
+      }
+    });
+  };
+  process.once("SIGINT", shutdown);
+  process.once("SIGTERM", shutdown);
+}
+
+startServer().catch(async error => {
+  console.error("Failed to initialize the application:", error);
+  try {
+    await storage.close();
+  } catch (closeError) {
+    console.error("Failed to close application storage:", closeError);
+  }
+  process.exitCode = 1;
 });

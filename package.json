@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "description": "Teacher dashboard and student exam portal (MCQ, coding, writing)",
   "main": "server.js",
-  "scripts": { "start": "node server.js" },
-  "dependencies": { "express": "^4.19.2" }
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "pg": "^8.23.1"
+  }
 }

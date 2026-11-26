@@ -3,3 +3,4 @@ data.backup.json
 node_modules
 *.log
 .env
+.tsupgrader/runtime-validation/
